@@ -1166,93 +1166,77 @@ suffixTable = {
 
 # region sql
 pdumpTemplate = Template(
-    """IMPORTANT NOTE: This sql queries not created for apply directly, use '.pdump load' command in console or client chat instead.
-IMPORTANT NOTE: NOT APPLY ITS DIRECTLY to character DB or you will DAMAGE and CORRUPT character DB
-
-UPDATE character_db_version SET $database_version = 1 WHERE FALSE;
+    """IMPORTANT NOTE: THIS DUMPFILE IS MADE FOR USE WITH THE 'PDUMP' COMMAND ONLY - EITHER THROUGH INGAME CHAT OR ON CONSOLE!
+IMPORTANT NOTE: DO NOT apply it directly - it will irreversibly DAMAGE and CORRUPT your database! You have been warned!
 
 $characters_row
 $achievements
 $glyphs
-INSERT INTO `character_homebind` VALUES ('$char_guid', '$start_map', '3703', '$pos_x', '$pos_y', '$pos_z');
-INSERT INTO `character_inventory` VALUES ('$char_guid', '0', '24', '184', '6948'); -- Hearthstone
-INSERT INTO `character_inventory` VALUES ('$char_guid', '0', '19', '217', '$bag_id'); -- Large Bag
-INSERT INTO `character_inventory` VALUES ('$char_guid', '0', '22', '218', '$bag_id'); -- Large Bag
-INSERT INTO `character_inventory` VALUES ('$char_guid', '0', '21', '219', '$bag_id'); -- Large Bag
-INSERT INTO `character_inventory` VALUES ('$char_guid', '0', '20', '220', '$bag_id'); -- Large Bag
+INSERT INTO `character_homebind` (`guid`, `mapId`, `zoneId`, `posX`, `posY`, `posZ`) VALUES ('$char_guid', '$start_map', '3703', '$pos_x', '$pos_y', '$pos_z');
+INSERT INTO `character_inventory` (`guid`, `bag`, `slot`, `item`) VALUES ('$char_guid', '0', '19', '217'); -- Large Bag
+INSERT INTO `character_inventory` (`guid`, `bag`, `slot`, `item`) VALUES ('$char_guid', '0', '22', '218'); -- Large Bag
+INSERT INTO `character_inventory` (`guid`, `bag`, `slot`, `item`) VALUES ('$char_guid', '0', '21', '219'); -- Large Bag
+INSERT INTO `character_inventory` (`guid`, `bag`, `slot`, `item`) VALUES ('$char_guid', '0', '20', '220'); -- Large Bag
 $inventory_list$pet_list
 $skills
 $spells
 $talents
-INSERT INTO `item_instance` VALUES ('184', '$char_guid', '6948', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0'$text);
-INSERT INTO `item_instance` VALUES ('217', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0'$text);
-INSERT INTO `item_instance` VALUES ('218', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0'$text);
-INSERT INTO `item_instance` VALUES ('219', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0'$text);
-INSERT INTO `item_instance` VALUES ('220', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0'$text);
+INSERT INTO `item_instance` (`guid`, `itemEntry`, `owner_guid`, `creatorGuid`, `giftCreatorGuid`, `count`, `duration`, `charges`, `flags`, `enchantments`, `randomPropertyId`, `durability`, `playedTime`, `text`) VALUES ('184', '$bag_id', '$char_guid', '6948', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0', '');
+INSERT INTO `item_instance` (`guid`, `itemEntry`, `owner_guid`, `creatorGuid`, `giftCreatorGuid`, `count`, `duration`, `charges`, `flags`, `enchantments`, `randomPropertyId`, `durability`, `playedTime`, `text`) VALUES ('217', '$bag_id', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0', '');
+INSERT INTO `item_instance` (`guid`, `itemEntry`, `owner_guid`, `creatorGuid`, `giftCreatorGuid`, `count`, `duration`, `charges`, `flags`, `enchantments`, `randomPropertyId`, `durability`, `playedTime`, `text`) VALUES ('218', '$bag_id', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0', '');
+INSERT INTO `item_instance` (`guid`, `itemEntry`, `owner_guid`, `creatorGuid`, `giftCreatorGuid`, `count`, `duration`, `charges`, `flags`, `enchantments`, `randomPropertyId`, `durability`, `playedTime`, `text`) VALUES ('219', '$bag_id', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0', '');
+INSERT INTO `item_instance` (`guid`, `itemEntry`, `owner_guid`, `creatorGuid`, `giftCreatorGuid`, `count`, `duration`, `charges`, `flags`, `enchantments`, `randomPropertyId`, `durability`, `playedTime`, `text`) VALUES ('220', '$bag_id', '$char_guid', '$bag_id', '0', '0', '1', '0', '0 0 0 0 0 ', '1', '$enchantments', '0', '100', '0', '');
 $instance_list
 $actions
 $factions
 """
 )
 
-instanceEnchantTemplateWOTLK = Template("$main_enchant 0 0 0 0 0 $gem1 0 0 $gem2 0 0 $gem3 0 0 $socket_bonus 0 0 $enchant_1 0 0 $enchant_2 0 0 $enchant_3 0 0 0 0 0 0 0 0 0 0 0 ")
-instanceEnchantTemplateTBC = Template("$main_enchant 0 0 0 0 0 $gem1 0 0 $gem2 0 0 $gem3 0 0 $socket_bonus 0 0 $enchant_1 0 0 $enchant_2 0 0 $enchant_3 0 0 0 0 0 0 0 0 ")
-instanceEnchantTemplateVan = Template("$main_enchant 0 0 0 0 0 0 0 0 $enchant_1 0 0 $enchant_2 0 0 $enchant_3 0 0 0 0 0 ")
+instanceEnchantTemplate = Template("$main_enchant 0 0 0 0 0 $gem1 0 0 $gem2 0 0 $gem3 0 0 $socket_bonus 0 0 $enchant_1 0 0 $enchant_2 0 0 $enchant_3 0 0 0 0 0 0 0 0 0 0 0 ")
 
-charactersTemplateWOTLK = Template("INSERT INTO `characters` VALUES ('$char_guid', '5', '$char_name', '$char_race', '$char_class', '$char_gender', '$char_level', '0', '300000000', '0', '0', '65568', '$pos_x', '$pos_y', '$pos_z', '$start_map', '0', '4.13832', '2 0 0 8 0 0 1048576 0 0 0 0 0 0 0 ', '0', '1', '200', '175', '1669632358', '1', '0', '0', '0', '0', '0', '0', '0', '0', '8', '0', '0', '4395', '0', '', '5000', '75000', '0', '0', '0', '0', '0', '0', '0', '4294967295', '0', '$char_health', '$char_power', '0', '0', '100', '0', '0', '0', '1', '0', '0 0 0 0 0 0 1048576 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 512 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 4194304 256 0 0 0 0 0 0 0 0 67108864 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 ', NULL, '0', '0 0 0 0 0 0 ', '0', '0', '0', NULL, NULL, NULL);")
-charactersTemplateTBC = Template("INSERT INTO `characters` VALUES ('$char_guid', '5', '$char_name', '$char_race', '$char_class', '$char_gender', '$char_level', '0', '300000000', '0', '0', '65568', '$pos_x', '$pos_y', '$pos_z', '$start_map', '0', '1.86449', '2 0 0 8 0 0 1048576 0 0 0 0 0 0 0 0 0 ', '0', '1', '200', '175', '1642414101', '1', '0', '0', '0', '0', '0', '0', '0', '0', '10', '0', '0', '3703', '0', '', '0', '0', '0', '0', '0', '0', '0', '0', '2147483647', '0', '5594', '0', '0', '0', '100', '0', '4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 ', NULL, '0', '0 0 ', '0', '0', '0', NULL, NULL, NULL);")
-charactersTemplateVan = Template("INSERT INTO `characters` VALUES ('$char_guid', '5', '$char_name', '$char_race', '$char_class', '$char_gender', '$char_level', '0', '300000000', '0', '0', '0', '$pos_x', '$pos_y', '$pos_z', '$start_map', '2.70526', '1024 0 0 0 0 0 0 0 ', '0', '1', '0', '0', '1642834034', '1', '0', '0', '0', '0', '0', '0', '0', '0', '2', '0', '32', '0', '0', '', '0', '0', '0', '0', '0', '0', '0', '63', '79', '0', '0', '100', '0', '4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 4294967295 ', NULL, '0', '0', '0', '0', NULL, NULL, NULL);")
+charactersTemplateAcore = Template("INSERT INTO `characters` (`guid`, `account`, `name`, `race`, `class`, `gender`, `level`, `money`, `position_x`, `position_y`, `position_z`, `map`, `cinematic`, `arenaPoints`, `totalHonorPoints`, `health`,) VALUES('$char_guid', '5', '$char_name', '$char_race', '$char_class', '$char_gender', '$char_level', '300000000', '$pos_x', '$pos_y', '$pos_z', '$start_map', '1', '5000', '75000', '100');")
 
 skillsTemplate = Template(
-    """INSERT INTO `character_skills` VALUES ('$char_guid', '$skill_id', '$current_skill', '$max_skill');
+    """INSERT INTO `character_skills` (`guid`, `skill`, `value`, `max`) VALUES ('$char_guid', '$skill_id', '$current_skill', '$max_skill');
 """
 )
 
 wornTemplate = Template(
-    """INSERT INTO `character_inventory` VALUES ('$char_guid', '$bag_id', '$slot_id', '$item_guid', '$item_entry');
+    """INSERT INTO `character_inventory` (`guid`, `bag`, `slot`, `item`) VALUES ('$char_guid', '$bag_id', '$slot_id', '$item_guid');
 """
 )
 
 instanceTemplate = Template(
-    """INSERT INTO `item_instance` VALUES ('$item_guid', '$char_guid', '$item_entry', '0', '0', '$item_count', '0', '-1 0 0 0 0 ', '1', '$enchantments', '$item_suffix', '100', '0');
-"""
-)
-
-instanceTemplateWotLK = Template(
-    """INSERT INTO `item_instance` VALUES ('$item_guid', '$char_guid', '$item_entry', '0', '0', '$item_count', '0', '0 0 0 0 0 ', '1', '$enchantments', '$item_suffix', '60', '0', '');
+    """INSERT INTO `item_instance` (`guid`, `itemEntry`, `owner_guid`, `creatorGuid`, `giftCreatorGuid`, `count`, `duration`, `charges`, `flags`, `enchantments`, `randomPropertyId`, `durability`, `playedTime`, `text`) VALUES ('$item_guid', '$item_entry', '$char_guid', '0', '0', '$item_count', '0', '-1 0 0 0 0 ', '1', '$enchantments', '$item_suffix', '255', '0', '');
 """
 )
 
 actionTemplate = Template(
-    "INSERT INTO `character_action` VALUES ('$char_guid', '$slot_id', '$action_id', '$action_type');\n"
-)
-
-actionTemplateWotLK = Template(
-    "INSERT INTO `character_action` VALUES ('$char_guid', '0', '$slot_id', '$action_id', '$action_type');\n"
+    "INSERT INTO `character_action` (`guid`, `spec`, `button`, `action`, `type`) VALUES ('$char_guid', '0', '$slot_id', '$action_id', '$action_type');\n"
 )
 
 petTemplate = Template(
-    "\nINSERT INTO `character_pet` VALUES ('10000', '$pet_entry', '$pet_owner', '$pet_model', '13481', '1', '$pet_level', '0', '1', '1000', '6', '0', '300', '$pet_name', '1', '0', '$pet_health', '$pet_resource', '157750', '1642440972', '0', '0', '7 2 7 1 7 0 129 0 129 0 129 0 129 0 6 2 6 1 6 0 ', '0 0 0 0 0 0 0 0 ');"
+    "\nINSERT INTO `character_pet`(`id`, `entry`, `owner`, `modelid`, `CreatedBySpell`, `PetType`, `level`, `name`, `renamed`, `curhealth`, `curmana`, `curhappiness`) VALUES ('10000', '$pet_entry', '$pet_owner', '$pet_model', '13481', '1', '$pet_level', '$pet_name', '0', '$pet_health', '$pet_resource', '1050000');"
 )
 
 spellTemplate = Template(
-    "INSERT INTO `character_spell` VALUES ('$char_guid', '$spell_id', '1', '0');\n"
+    "INSERT INTO `character_spell` (`guid`, `spell`, `specMask`) VALUES ('$char_guid', '$spell_id', '255');\n"
 )
 
 talentTemplate = Template(
-    "INSERT INTO `character_talent` VALUES ('$char_guid', '$talent_id', '$current_rank', '0');\n"
+    "INSERT INTO `character_talent` (`guid`, `spell`, `specMask`) VALUES ('$char_guid', '$talent_id', '1');\n"
 )
 
 factionTemplate = Template(
-    "INSERT INTO `character_reputation` VALUES ('$char_guid', '$faction_id', '$faction_standing', '1');\n"
+    "INSERT INTO `character_reputation` (`guid`, `faction`, `standing`, `flags`) VALUES ('$char_guid', '$faction_id', '$faction_standing', '1');\n"
 )
 
 glyphTemplate = Template(
-    "INSERT INTO `character_glyphs` VALUES ('$char_guid', '0', '$glyph_slot', '$glyph_id');\n"
+    "INSERT INTO `character_glyphs` (`guid`, `talentGroup`, `glyph1`, `glyph2`, `glyph3`, `glyph4`, `glyph5`, `glyph6`) VALUES ('$char_guid', '0', '$glyph1', '$glyph2', '$glyph3', '$glyph4', '$glyph5', '$glyph6');\n"
 )
 
 achievementTemplate = Template(
-    "INSERT INTO `character_achievement` VALUES ('$char_guid', '$achievement_id', '$timestamp');\n"
+    "INSERT INTO `character_achievement` (`guid`, `achievement`, `date`) VALUES ('$char_guid', '$achievement_id', '$timestamp');\n"
 )
 
 singleMacroTemplate = Template(

@@ -86,7 +86,7 @@ def parse_file(f, exp):
                 socketBonus = itemSocketBonusMapWotlk[int(item_entry)]
             if str(suffix) not in suffixTable:
                 suffix = 0
-            enchantments = instanceEnchantTemplateWOTLK.fill(
+            enchantments = instanceEnchantTemplate.fill(
                 main_enchant=enchant,
                 gem1=gemPropertyMapWotLK[gemIDPropertyMapWotlk[int(gems[0].split(":")[0])]],
                 gem2=gemPropertyMapWotLK[gemIDPropertyMapWotlk[int(gems[1].split(":")[0])]],
@@ -96,24 +96,14 @@ def parse_file(f, exp):
                 enchant_2=suffixTable[str(suffix)][1],
                 enchant_3=suffixTable[str(suffix)][2],
                 )
-        if exp != 2:
-            instance_list += instanceTemplate.fill(
-                item_guid=itemguiditr,
-                item_entry=item_entry,
-                item_count=item_count,
-                item_suffix=-suffix,
-                enchantments=enchantments,
-            )
-            itemguiditr += 2
-        else:
-            instance_list += instanceTemplateWotLK.fill(
-                item_guid=itemguiditr,
-                item_entry=item_entry,
-                item_count=item_count,
-                item_suffix=-suffix,
-                enchantments=enchantments,
-            )
-            itemguiditr += 2
+        instance_list += instanceTemplate.fill(
+            item_guid=itemguiditr,
+            item_entry=item_entry,
+            item_count=item_count,
+            item_suffix=-suffix,
+            enchantments=enchantments,
+        )
+        itemguiditr += 2
 
     def parse_slots_equipped():
         def parse_slots_base():
@@ -305,18 +295,11 @@ def parse_file(f, exp):
             actiontype = actionInfo[1].split("=")[1]
             actionId = actionInfo[2].split("=")[1].replace("\n", "")
             slot = int(slot) - 1
-            if exp != 2:
-                action_list += actionTemplate.fill(
-                    slot_id=slot,
-                    action_id=actionId,
-                    action_type=actionMap[actiontype],
-                )
-            else:
-                action_list += actionTemplateWotLK.fill(
-                    slot_id=slot,
-                    action_id=actionId,
-                    action_type=actionMap[actiontype],
-                )
+            action_list += actionTemplate.fill(
+                slot_id=slot,
+                action_id=actionId,
+                action_type=actionMap[actiontype],
+            )
 
         for faction in all_items["factions"][3]:
             factionInfo = faction.split(",")
@@ -378,11 +361,13 @@ def parse_file(f, exp):
     
     def parse_glyphs():
         global glyphs
+        glyphArray = ["0", "0", "0", "0", "0", "0"]
         for glyph in all_items["glyphs"][3]:
             glyphslot = int(glyph.split(",")[0])
             glyphspell = glyph.split(",")[1]
             if glyphspell in glyphMap:
-                glyphs += glyphTemplate.fill(glyph_slot=glyphslot-1,glyph_id=glyphMap[glyphspell])
+                glyphArray[glyphslot-1] = glyphMap[glyphspell]
+        glyphs += glyphTemplate.fill(glyph1=glyphArray[0], glyph2=glyphArray[1], glyph3=glyphArray[2], glyph4=glyphArray[3], glyph5=glyphArray[4], glyph6=glyphArray[5])
 
     def parse_achievements():
         global achievements
@@ -423,8 +408,8 @@ def parse_file(f, exp):
                 start_map=startPos[3])
         else:
             version = "required_14061_01_characters_fishingSteps"
-            enchantments = instanceEnchantTemplateWOTLK.fill(main_enchant=0, gem1=0, gem2=0, gem3=0, socket_bonus=0, enchant_1=0, enchant_2=0, enchant_3=0)
-            charactersRow = charactersTemplateWOTLK.fill(
+            enchantments = instanceEnchantTemplate.fill(main_enchant=0, gem1=0, gem2=0, gem3=0, socket_bonus=0, enchant_1=0, enchant_2=0, enchant_3=0)
+            charactersRow = charactersTemplateAcore.fill(
                 **char_info,
                 pos_x=startPos[0],
                 pos_y=startPos[1],
