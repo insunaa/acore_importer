@@ -256,15 +256,15 @@ def parse_file(f, exp):
             for index in range(len(talentArray)):
                 talent = talentArray[index]
                 if int(talent["r0"]) == spell:
-                    talents+=talentTemplate.fill(talent_id=talent["id"],current_rank=0)
+                    talents+=talentTemplate.fill(talent_id=spell,current_rank=0)
                 elif int(talent["r1"]) == spell:
-                    talents+=talentTemplate.fill(talent_id=talent["id"],current_rank=1)
+                    talents+=talentTemplate.fill(talent_id=spell,current_rank=1)
                 elif int(talent["r2"]) == spell:
-                    talents+=talentTemplate.fill(talent_id=talent["id"],current_rank=2)
+                    talents+=talentTemplate.fill(talent_id=spell,current_rank=2)
                 elif int(talent["r3"]) == spell:
-                    talents+=talentTemplate.fill(talent_id=talent["id"],current_rank=3)
+                    talents+=talentTemplate.fill(talent_id=spell,current_rank=3)
                 elif int(talent["r4"]) == spell:
-                    talents+=talentTemplate.fill(talent_id=talent["id"],current_rank=4)
+                    talents+=talentTemplate.fill(talent_id=spell,current_rank=4)
 
         professions_spells = [
             int(e) for e in all_items["spells"][3] if int(e) in all_prof_skill_ids
@@ -378,7 +378,7 @@ def parse_file(f, exp):
             day = int(achievement.split(",")[3])
             date_time = datetime.datetime(year+2000, month, day, 0, 0)
             timestamp = time.mktime(date_time.timetuple())
-            achievements += achievementTemplate.fill(achievement_id=achId,timestamp=timestamp)
+            achievements += achievementTemplate.fill(achievement_id=achId,timestamp=int(timestamp))
 
     def write_pdump(char_info):
         startPos = startPosMap[exp][factions[clean(f[5].split("=")[1])]]
