@@ -372,13 +372,14 @@ def parse_file(f, exp):
     def parse_achievements():
         global achievements
         for achievement in all_items["achievements"][3]:
-            achId = achievement.split(",")[0]
-            year = int(achievement.split(",")[1])
-            month = int(achievement.split(",")[2])
-            day = int(achievement.split(",")[3])
-            date_time = datetime.datetime(year+2000, month, day, 0, 0)
-            timestamp = time.mktime(date_time.timetuple())
-            achievements += achievementTemplate.fill(achievement_id=achId,timestamp=int(timestamp))
+            if "," in achievement:
+                achId = achievement.split(",")[0]
+                year = int(achievement.split(",")[1])
+                month = int(achievement.split(",")[2])
+                day = int(achievement.split(",")[3])
+                date_time = datetime.datetime(year+2000, month, day, 0, 0)
+                timestamp = time.mktime(date_time.timetuple())
+                achievements += achievementTemplate.fill(achievement_id=achId,timestamp=int(timestamp))
 
     def write_pdump(char_info):
         startPos = startPosMap[exp][factions[clean(f[5].split("=")[1])]]
