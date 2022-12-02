@@ -75,7 +75,6 @@ function scanGear()
 		local equipID = GetInventoryItemID("player", i);
 		local itemLink = GetInventoryItemLink('player', i)
 
-			
 		if (equipID ~= nil) then
 			local itemSplit = GetItemSplit(itemLink)
 			local suffix = itemSplit[7] * -1
@@ -112,7 +111,6 @@ function scanGear()
 		
 	end
 	
-
 	local ammoID = GetInventoryItemID("player", 0);
 	if (ammoID ~= nil) then
 		addPrint("ammo=,id=" .. ammoID)
@@ -137,6 +135,15 @@ function scanGear()
 
 	addPrint("")
 	addPrint("### GEAR FROM BAGS ###")
+
+	if (true) then
+		for i=20, 23, 1  do
+			local equipID = GetInventoryItemID("player", i);
+			if equipID ~= nil then
+				addPrint(i .. "," .. equipID)
+			end
+		end
+	end
 
 	for bag=0, (NUM_BAG_SLOTS + GetNumBankSlots()) do
 		if (GetContainerNumSlots(bag) ~= 0) then
@@ -181,7 +188,11 @@ function scanGear()
 						--addPrint("# " .. convertSlot(itemEquipLoc) .. "=,id=" .. itemID .. suffix)
 						local _, itemCount = GetContainerItemInfo(bag, bagSlots)
 						--addPrint(itemName)
-						addPrint("id=" .. itemID .. suffix .. ",count=" .. itemCount .. ",enchantId=" .. enchantId .. ",gem1=" .. gem1 ..":" .. tostring(gemColors[1]) .. ",gem2=" .. gem2 ..":" .. tostring(gemColors[2]) .. ",gem3=" .. gem3 ..":" .. tostring(gemColors[3]) .. ",buckle=" .. tostring(hasBuckle))
+						if (true) then
+							addPrint("bag=" .. bag .. ",slot=" .. bagSlots ..",id=" .. itemID .. suffix .. ",count=" .. itemCount .. ",enchantId=" .. enchantId .. ",gem1=" .. gem1 ..":" .. tostring(gemColors[1]) .. ",gem2=" .. gem2 ..":" .. tostring(gemColors[2]) .. ",gem3=" .. gem3 ..":" .. tostring(gemColors[3]) .. ",buckle=" .. tostring(hasBuckle))
+						else
+							addPrint("id=" .. itemID .. suffix .. ",count=" .. itemCount .. ",enchantId=" .. enchantId .. ",gem1=" .. gem1 ..":" .. tostring(gemColors[1]) .. ",gem2=" .. gem2 ..":" .. tostring(gemColors[2]) .. ",gem3=" .. gem3 ..":" .. tostring(gemColors[3]) .. ",buckle=" .. tostring(hasBuckle))
+						end
 						--print(itemName .. "(" .. itemType .. ")");
 						
 					end
